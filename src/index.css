@@ -1,0 +1,15 @@
+/* Limpamos os estilos padrões do Vite para não conflitar com o nosso site.
+  Todo o visual agora será controlado pelo Tailwind e pelo App.jsx.
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Evita rolagem lateral indesejada */
+}
+
+/* Garante que o html ocupe a altura toda */
+html, body, #root {
+  height: 100%;
+}
