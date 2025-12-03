@@ -123,7 +123,6 @@ const App = () => {
   useEffect(() => {
     if (!user) return;
 
-    // CORREÇÃO: Usando 'content/main' para garantir 6 segmentos (par) para o documento
     // artifacts/appId/public/data/content/main
     const contentRef = doc(db, ...PUBLIC_DATA_PATH, 'content', 'main');
     
@@ -140,14 +139,12 @@ const App = () => {
       setLoading(false);
     }, (error) => {
       console.error("Erro ao ler conteúdo:", error);
-      // Fallback para não travar a tela se der erro de permissão/leitura
       if (!siteData) {
         setSiteData(defaultSiteData);
         setLoading(false);
       }
     });
 
-    // CORREÇÃO: Usando coleção 'projects' dentro de 'data'
     // artifacts/appId/public/data/projects (coleção)
     const projectsRef = collection(db, ...PUBLIC_DATA_PATH, 'projects');
     
@@ -187,7 +184,6 @@ const App = () => {
   const handleSaveTexts = async () => {
     if (!user) return;
     try {
-      // CORREÇÃO: Caminho atualizado
       const contentRef = doc(db, ...PUBLIC_DATA_PATH, 'content', 'main');
       await updateDoc(contentRef, tempSiteData);
       setIsEditingText(false);
@@ -217,11 +213,9 @@ const App = () => {
 
     try {
       if (editingProject) {
-        // CORREÇÃO: Caminho atualizado
         const projRef = doc(db, ...PUBLIC_DATA_PATH, 'projects', editingProject.id);
         await updateDoc(projRef, { ...projectForm });
       } else {
-        // CORREÇÃO: Caminho atualizado
         const projectsRef = collection(db, ...PUBLIC_DATA_PATH, 'projects');
         await addDoc(projectsRef, { ...projectForm, createdAt: Date.now() });
       }
@@ -234,7 +228,6 @@ const App = () => {
   const handleDeleteProject = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este projeto permanentemente?")) {
       try {
-        // CORREÇÃO: Caminho atualizado
         await deleteDoc(doc(db, ...PUBLIC_DATA_PATH, 'projects', id));
       } catch (e) {
         alert("Erro ao excluir: " + e.message);
@@ -291,15 +284,27 @@ const App = () => {
 
       {/* LOGIN MODAL */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black/80 z-[70] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black z-[70] flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-8 max-w-sm w-full shadow-2xl">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-gray-900">Acesso Restrito</h3>
               <button onClick={() => setShowLoginModal(false)}><X size={24} className="text-gray-500 hover:text-red-500" /></button>
             </div>
             <form onSubmit={handleLogin} className="space-y-4">
-              <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full border rounded p-2" placeholder="Usuário (admin)" />
-              <input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} className="w-full border rounded p-2" placeholder="Senha (admin123)" />
+              <input 
+                type="text" 
+                value={loginUser} 
+                onChange={(e) => setLoginUser(e.target.value)} 
+                className="w-full border rounded p-2 focus:ring-2 focus:ring-orange-500 outline-none" 
+                placeholder="Usuário" 
+              />
+              <input 
+                type="password" 
+                value={loginPass} 
+                onChange={(e) => setLoginPass(e.target.value)} 
+                className="w-full border rounded p-2 focus:ring-2 focus:ring-orange-500 outline-none" 
+                placeholder="Senha" 
+              />
               {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
               <button type="submit" className="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600">Entrar</button>
             </form>
